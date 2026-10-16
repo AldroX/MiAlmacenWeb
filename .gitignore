@@ -10,8 +10,7 @@ node_modules
 .claude/
 .windsurf/
 
-# Backend has its own git repository
-backend/
+
 
 # Lock files from local tooling
 *.log
