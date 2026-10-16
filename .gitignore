@@ -1,0 +1,17 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/src/generated/prisma
+
+# Auto-synced tool/skill directories (managed externally)
+.atl/
+.agents/
+.claude/
+.windsurf/
+
+# Backend has its own git repository
+backend/
+
+# Lock files from local tooling
+*.log
