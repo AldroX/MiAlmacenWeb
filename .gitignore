@@ -3,6 +3,7 @@ node_modules
 .env
 
 /src/generated/prisma
+/backend/src/generated/prisma
 
 # Auto-synced tool/skill directories (managed externally)
 .atl/
