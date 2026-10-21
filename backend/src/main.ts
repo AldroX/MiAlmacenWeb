@@ -10,7 +10,13 @@ async function bootstrap() {
     .setTitle('My API')
     .setDescription('API REST para la gestión de productos, categorías e inventario')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth({
+      type:'http',
+      scheme: 'bearer',
+      in:'header',
+      name:'Authorization',
+      description:'Enter your Bearer token',
+    })
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig);
