@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { UserService } from '../user/user.service';
+import { RegisterDto } from './dto/register.dto';
+import { PrismaService } from '../../prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private readonly prismaService: PrismaService,
+    private jwtService: JwtService
+  ) {}
+  
+
+  async validateUser(user:LoginDto){
+     const foundUser = await this.prismaService.user.findUnique({
+      where: {
+        email: user.email
+      }
+     })
+
+     if(!foundUser) return null;
+
+     if(foundUser.password === user.password){
+      return this.jwtService.sign({
+        id:foundUser.id,
+        email: foundUser.email,
+        role: foundUser.role
+      });
+     }
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async register(registerDto: RegisterDto) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: registerDto.email,
+      },
+    });
+    if (user) {
+      throw new Error('User already exists');
+    }
+    await this.prismaService.user.create({
+      data: registerDto,
+    });
+    return { message: 'User registered successfully' };
   }
 }
+ 
