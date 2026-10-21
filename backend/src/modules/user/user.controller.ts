@@ -8,12 +8,14 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBody, ApiConsumes, ApiCreatedResponse } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { JwAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -26,8 +28,10 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+
   @Get()
   @ApiCreatedResponse({type: User, isArray:true})
+  @UseGuards(JwAuthGuard)
   findAll() {
     return this.userService.findAll();
   }
